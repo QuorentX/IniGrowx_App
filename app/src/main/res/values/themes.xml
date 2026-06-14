@@ -1,6 +1,11 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
-    <style name="Base.Theme.Inigrowx" parent="Theme.Material3.DayNight.NoActionBar">
+<resources>
+
+    <style
+        name="Theme.Inigrowx"
+        parent="Theme.AppCompat.DayNight.NoActionBar">
+
+        <item name="android:statusBarColor">@android:color/transparent</item>
+
     </style>
 
-    <style name="Theme.Inigrowx" parent="Base.Theme.Inigrowx" />
 </resources>
