@@ -11,7 +11,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.example.inigrowx"
+        applicationId = "com.inigrowx.app"
         minSdk = 24
         targetSdk = 36
         versionCode = 1
@@ -36,6 +36,7 @@ android {
 dependencies {
     implementation(libs.activity.ktx)
     implementation(libs.appcompat)
+    implementation(libs.browser)
     implementation(libs.constraintlayout)
     implementation(libs.material)
     testImplementation(libs.junit)

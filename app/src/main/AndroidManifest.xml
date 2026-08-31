@@ -15,9 +15,43 @@
         <activity
             android:name=".MainActivity"
             android:exported="true"
+            android:launchMode="singleTask"
             android:windowSoftInputMode="adjustResize">
 
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
 
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+
+                <data
+                    android:scheme="inigrowx"
+                    android:host="auth"
+                    android:pathPrefix="/callback"/>
+            </intent-filter>
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+
+                <data
+                    android:scheme="https"
+                    android:host="inigrowx.in"
+                    android:pathPrefix="/auth/callback"/>
+                <data
+                    android:scheme="https"
+                    android:host="inigrowx.in"
+                    android:pathPrefix="/auth/app-return"/>
+                <data
+                    android:scheme="https"
+                    android:host="www.inigrowx.in"
+                    android:pathPrefix="/auth/callback"/>
+                <data
+                    android:scheme="https"
+                    android:host="www.inigrowx.in"
+                    android:pathPrefix="/auth/app-return"/>
+            </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
