@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Message;
 import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
@@ -81,7 +82,39 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        webView.setWebChromeClient(new WebChromeClient());
+        webView.setWebChromeClient(new WebChromeClient() {
+            @Override
+            public boolean onCreateWindow(
+                    WebView view,
+                    boolean isDialog,
+                    boolean isUserGesture,
+                    Message resultMsg) {
+                // target="_blank" / window.open() — load into the same WebView.
+                WebView.HitTestResult result = view.getHitTestResult();
+                String url = result != null ? result.getExtra() : null;
+                if (!TextUtils.isEmpty(url)) {
+                    view.loadUrl(url);
+                    return false;
+                }
+
+                WebView transportView = new WebView(view.getContext());
+                transportView.setWebViewClient(new WebViewClient() {
+                    @Override
+                    public boolean shouldOverrideUrlLoading(
+                            WebView newView,
+                            WebResourceRequest request) {
+                        view.loadUrl(request.getUrl().toString());
+                        return true;
+                    }
+                });
+
+                WebView.WebViewTransport transport =
+                        (WebView.WebViewTransport) resultMsg.obj;
+                transport.setWebView(transportView);
+                resultMsg.sendToTarget();
+                return true;
+            }
+        });
 
         webView.setWebViewClient(new WebViewClient() {
 
@@ -94,7 +127,24 @@ public class MainActivity extends AppCompatActivity {
                     return true;
                 }
 
-                return false;
+                String scheme = uri.getScheme();
+                if (scheme == null) {
+                    return false;
+                }
+
+                // Keep http(s) navigation inside the WebView (inigrowx + other sites).
+                if ("http".equalsIgnoreCase(scheme) || "https".equalsIgnoreCase(scheme)) {
+                    return false;
+                }
+
+                // tel:, mailto:, intent:, etc. — open with the system handler.
+                try {
+                    Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                    startActivity(intent);
+                } catch (Exception ignored) {
+                    // No app can handle this URI.
+                }
+                return true;
             }
 
             @Override
